@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isEdit} ? 'Редактировать кошку' : 'Добавить кошку'">Редактировать кошку</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h1 class="text-center text-primary mb-4"
+        th:text="${isEdit} ? 'Редактировать кошку' : 'Добавить новую кошку'">Редактировать кошку</h1>
+
+    <div class="card shadow mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <form th:action="@{/user/cat/save}" th:object="${cat}" method="post">
+                <input type="hidden" th:field="*{id}"/>
+                <input type="hidden" name="catId" th:value="${cat.id}"/>
+                <input type="hidden" name="ownerId" th:value="${ownerId}"/>
+
+                <div class="mb-3">
+                    <label class="form-label">Имя *</label>
+                    <input type="text" th:field="*{name}" class="form-control" required maxlength="256">
+                    <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Порода</label>
+                    <input type="text" th:field="*{breed}" class="form-control" maxlength="256">
+                    <div class="text-danger" th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Возраст *</label>
+                    <input type="number" th:field="*{age}" class="form-control" min="1" max="30" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" name="action" value="save" class="btn btn-primary">Сохранить изменения</button>
+
+                    <button type="submit" name="action" value="relinquish"
+                            class="btn btn-outline-danger"
+                            th:if="${isEdit}"
+                            th:data-bs-toggle="${ownershipEndDate == null ? 'modal' : null}"
+                            th:data-bs-target="${ownershipEndDate == null ? '#confirmRelinquishModal' : null}"
+                            th:disabled="${ownershipEndDate != null}"
+                    >
+                        <span th:if="${ownershipEndDate == null}">Перестать быть владельцем</span>
+                        <span th:if="${ownershipEndDate != null}">Вы уже отказались от кошки</span>
+                    </button>
+                </div>
+            </form>
+            <a href="/user/profile" class="btn btn-link mt-3 w-100">Назад в профиль</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmRelinquishModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Подтверждение</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите отказаться от кошки <b th:text="${cat.name}">Мурка</b>?
+                Это действие нельзя отменить: вы перестанете отображаться как её владелец.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <form th:action="@{/user/cat/save}" method="post" style="display:inline;">
+                    <input type="hidden" name="catId" th:value="${cat.id}"/>
+                    <input type="hidden" name="ownerId" th:value="${ownerId}"/>
+                    <input type="hidden" name="action" value="relinquish"/>
+                    <button type="submit" class="btn btn-danger">Да, отказаться</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
