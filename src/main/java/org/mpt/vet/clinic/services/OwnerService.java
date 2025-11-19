@@ -3,7 +3,7 @@ package org.mpt.vet.clinic.services;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.mpt.vet.clinic.domains.*;
-import org.mpt.vet.clinic.dto.CreateOwnerDto;
+import org.mpt.vet.clinic.dto.RegistrationDto;
 import org.mpt.vet.clinic.repositories.CatOwnerRepository;
 import org.mpt.vet.clinic.repositories.CatRepository;
 import org.mpt.vet.clinic.repositories.OwnerRepository;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class OwnerService {
     private final UserService userService;
 
     @Transactional
-    public void registerOwner(@NotNull CreateOwnerDto request) {
+    public void registerOwner(@NotNull RegistrationDto request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Пользователь с email '" + request.email() + "' уже существует.");
         }
@@ -112,5 +113,63 @@ public class OwnerService {
         String email = ((UserDetails) authentication.getPrincipal()).getUsername();
         User user = userService.findByEmail(email);
         return findByUserId(user.getId());
+    }
+
+    @Transactional
+    public Owner createOwner(Owner owner, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+
+        // Проверяем, не привязан ли уже этот пользователь к другому владельцу
+        if (ownerRepository.existsByUserId(userId)) {
+            throw new IllegalArgumentException("Этот пользователь уже привязан к другому владельцу");
+        }
+
+        owner.setUser(user);
+        return ownerRepository.save(owner);
+    }
+
+    @Transactional
+    public void updateOwner(Long id, Owner ownerDetails) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Владелец не найден"));
+
+        owner.setFullName(ownerDetails.getFullName());
+        owner.setPhone(ownerDetails.getPhone());
+        owner.setAddress(ownerDetails.getAddress());
+
+        ownerRepository.save(owner);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        Owner owner = ownerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Владелец не найден"));
+
+        ownerRepository.delete(owner);
+    }
+
+    public boolean existsByUserId(Long userId) {
+        return ownerRepository.existsByUserId(userId);
+    }
+
+    public List<User> getAvailableUsers() {
+        return userRepository.findUsersWithoutOwner();
+    }
+
+    public boolean existsByPhone(String phone) {
+        return ownerRepository.existsByPhone(phone);
+    }
+
+    public boolean existsByUserEmail(String email) {
+        return ownerRepository.existsByUserEmail(email);
+    }
+
+    public List<Owner> findAll() {
+        return ownerRepository.findAll();
+    }
+
+    public Optional<Owner> findById(Long id) {
+        return ownerRepository.findById(id);
     }
 }

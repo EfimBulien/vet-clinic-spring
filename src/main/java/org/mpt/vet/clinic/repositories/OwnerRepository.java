@@ -18,4 +18,13 @@ public interface OwnerRepository extends JpaRepository<Owner, Long> {
             "JOIN c.ownerships co " +
             "WHERE co.owner.id = :ownerId AND co.ownershipEndDate IS NULL")
     List<Cat> findActiveCatsByOwnerId(@Param("ownerId") Long ownerId);
+
+    boolean existsByPhone(String phone);
+
+    boolean existsByUserEmail(String email);
+
+    boolean existsByUserId(Long userId);
+
+    @Query("SELECT o FROM Owner o JOIN FETCH o.user")
+    List<Owner> findAllWithUser();
 }

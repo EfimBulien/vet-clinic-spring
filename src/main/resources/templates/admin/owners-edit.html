@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование владельца</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-pencil-square"></i> Редактирование владельца</h1>
+        <div>
+            <a th:href="@{/admin/owners}" class="btn btn-outline-primary">Назад к списку</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Данные владельца</h5>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/owners/edit/{id}(id=${ownerId})}" th:object="${editOwnerDto}" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">ФИО *</label>
+                        <input type="text" th:field="*{fullName}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''"
+                               required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}">
+                            <span th:errors="*{fullName}"></span>
+                        </div>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle"></i> Допустимы только буквы, пробелы, дефисы (-), точки (.) и апострофы (')
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="text" class="form-control" th:value="${owner.user.email}" readonly>
+                        <small class="form-text text-muted">Email нельзя изменить</small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" th:field="*{phone}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                               placeholder="+79991234567">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}">
+                            <span th:errors="*{phone}"></span>
+                        </div>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle"></i> Формат: +79991234567 или 79991234567 (10-20 цифр)
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Адрес</label>
+                        <input type="text" th:field="*{address}"
+                               class="form-control"
+                               th:classappend="${#fields.hasErrors('address')} ? 'is-invalid' : ''">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('address')}">
+                            <span th:errors="*{address}"></span>
+                        </div>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle"></i> Допустимы буквы, цифры, пробелы, запятые, точки, дефисы, /, №
+                        </div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

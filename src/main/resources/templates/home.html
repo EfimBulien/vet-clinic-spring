@@ -29,7 +29,8 @@
             </div>
 
             <div sec:authorize="hasAnyRole('MANAGER','ADMIN')">
-                <a href="manager/vets" class="btn btn-warning">Управление ветеренарами</a>
+                <a href="/manager/vets" class="btn btn-warning">Управление ветеренарами</a>
+                <a href="/admin/owners" class="btn btn-success">Управление владельцами</a>
             </div>
 
             <div sec:authorize="hasAnyRole('MANAGER')">

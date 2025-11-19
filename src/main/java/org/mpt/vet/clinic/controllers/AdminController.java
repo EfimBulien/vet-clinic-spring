@@ -103,27 +103,6 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
-//    @PostMapping("/users/{id}/roles")
-//    public String updateRoles(
-//            @PathVariable Long id,
-//            @RequestParam List<String> roles,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        try {
-//            Set<Role.RoleType> roleTypes = roles.stream()
-//                    .map(Role.RoleType::valueOf)
-//                    .collect(Collectors.toSet());
-//
-//            userService.updateRoles(id, roleTypes);
-//
-//            redirectAttributes.addFlashAttribute("success", "Роли пользователя обновлены");
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("error", "Ошибка при обновлении ролей: " + e.getMessage());
-//        }
-//
-//        return "redirect:/admin/dashboard";
-//    }
-
     @PostMapping("/users/{id}")
     public String deleteUser(
             @PathVariable Long id,

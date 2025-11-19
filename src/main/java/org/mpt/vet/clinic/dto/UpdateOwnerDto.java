@@ -1,13 +1,12 @@
 package org.mpt.vet.clinic.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateOwnerDto {
+public class UpdateOwnerDto {
 
     @NotBlank(message = "ФИО обязательно")
     @Size(max = 256, message = "ФИО не более 256 символов")
@@ -16,9 +15,6 @@ public class CreateOwnerDto {
             message = "Допустимы только буквы, пробелы, дефисы, точки и апострофы"
     )
     private String fullName;
-
-    @NotNull(message = "Необходимо выбрать пользователя")
-    private Long userId;
 
     @Pattern(
             regexp = "^\\+?[0-9]{10,20}$",

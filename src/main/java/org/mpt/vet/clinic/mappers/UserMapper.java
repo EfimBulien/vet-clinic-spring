@@ -1,13 +1,13 @@
 package org.mpt.vet.clinic.mappers;
 
 import org.mpt.vet.clinic.domains.User;
-import org.mpt.vet.clinic.dto.CreateOwnerDto;
+import org.mpt.vet.clinic.dto.RegistrationDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public User toUser(CreateOwnerDto request) {
+    public User toUser(RegistrationDto request) {
         if (request == null) {
             return null;
         }
