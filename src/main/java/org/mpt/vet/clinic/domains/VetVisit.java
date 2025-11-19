@@ -1,10 +1,7 @@
 package org.mpt.vet.clinic.domains;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -34,11 +31,11 @@ public class VetVisit {
     private Vet vet;
 
     @NotNull
-    @PastOrPresent(message = "Дата визита не может быть в будущем")
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate = LocalDate.now();
 
     private String diagnosis;
+
     private String treatment;
 
     @DecimalMin(value = "0.0")

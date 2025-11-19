@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Управление ветеринарами</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container mt-4">
-    <!-- Flash сообщения -->
     <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
         <span th:text="${success}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -17,16 +17,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <!-- Шапка -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>👨‍⚕️ Управление ветеринарами</h1>
+        <h1><i class="bi bi-person-badge"></i> Управление ветеринарами</h1>
         <div>
-            <a th:href="@{/manager/vets/add}" class="btn btn-primary me-2">Добавить ветеринара</a>
+            <a th:href="@{/manager/vets/add}" class="btn btn-primary me-2"><i class="bi bi-person-plus"></i> Добавить ветеринара</a>
             <a href="/" class="btn btn-outline-secondary">На главную</a>
         </div>
     </div>
 
-    <!-- Список ветеринаров -->
     <div class="card">
         <div class="card-header">
             <h5 class="mb-0">Список ветеринаров (<span th:text="${vets.size()}">0</span>)</h5>
@@ -55,12 +53,13 @@
                             <td th:text="${vet.phone}">+78001234567</td>
                             <td>
                                 <a th:href="@{/manager/vets/edit/{id}(id=${vet.id})}"
-                                   class="btn btn-sm btn-outline-primary me-1">✏️</a>
+                                   class="btn btn-sm btn-outline-primary me-1">Редактировать
+                                </a>
                                 <form th:action="@{/manager/vets/delete/{id}(id=${vet.id})}"
                                       method="post"
                                       style="display: inline;"
                                       onsubmit="return confirm('Удалить ветеринара ' + $(this).closest('tr').find('td:first').text() + '?')">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">🗑️</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
                                 </form>
                             </td>
                         </tr>
@@ -70,13 +69,12 @@
             </div>
             <div th:if="${vets == null or vets.empty}" class="text-center text-muted py-4">
                 <p>Нет зарегистрированных ветеринаров</p>
-                <a th:href="@{/manager/vets/add}" class="btn btn-primary">Добавить первого ветеринара</a>
+                <a th:href="@{/manager/vets/add}" class="btn btn-primary"><i class="bi bi-person-plus"></i> Добавить первого ветеринара</a>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

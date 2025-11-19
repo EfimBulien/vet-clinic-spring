@@ -4,44 +4,51 @@
     <meta charset="UTF-8">
     <title>Мой профиль</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-4">
     <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle-fill me-2"></i>
         <span th:text="${success}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         <span th:text="${error}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>🐱 Мой профиль</h1>
+        <h1><i class="bi bi-person-circle me-2"></i>Мой профиль</h1>
         <div>
-            <a th:href="@{/}" class="btn btn-outline-primary me-2">На главную</a>
-            <a th:href="@{/user/cat/add}" class="btn btn-outline-primary me-2">Добавить мою кошку</a>
-            <div th:if="${hasOwner}" class="mt-3">
-                <a th:href="@{/user/profile/edit}" class="btn btn-outline-primary btn-sm">
-                    Редактировать данные профиля
-                </a>
-            </div>
+            <a th:href="@{/}" class="btn btn-outline-primary me-2">
+                На главную
+            </a>
+            <a th:href="@{/user/cat/add}" class="btn btn-outline-primary me-2" th:if="${hasOwner}">
+                Добавить кошку
+            </a>
+            <a th:href="@{/user/profile/edit}" class="btn btn-outline-primary" th:if="${hasOwner}">
+                Изменить данные владельца
+            </a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">👤 Данные пользователя</h5>
+            <div class="card mb-4 h-100">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <i class="bi bi-person-badge me-2"></i>
+                    <h5 class="mb-0">Данные пользователя</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-borderless">
                         <tr>
-                            <th width="40%">Email:</th>
+                            <th width="40%"><i class="bi bi-envelope me-1"></i>Email:</th>
                             <td th:text="${email}">user@example.com</td>
                         </tr>
                         <tr>
-                            <th>Роли:</th>
+                            <th><i class="bi bi-shield-check me-1"></i>Роли:</th>
                             <td>
                                 <span th:each="role : ${roles}"
                                       class="badge me-1"
@@ -51,49 +58,54 @@
                                 </span>
                             </td>
                         </tr>
-                        <tr>
-                            <th>&nbsp;</th>
-                            <td>&nbsp;</td>
-                        </tr>
                     </table>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="card mb-4">
+            <div class="card mb-4 h-100">
                 <div class="card-header" th:classappend="${hasOwner} ? 'bg-success text-white' : 'bg-secondary text-white'">
-                    <h5 class="mb-0" th:text="${hasOwner} ? '👨‍💼 Данные владельца' : '⚙️ Системная информация'">
-                        Данные владельца
-                    </h5>
+                    <div class="d-flex align-items-center">
+                        <i th:if="${hasOwner}" class="bi bi-person-vcard me-2"></i>
+                        <h5 class="mb-0" th:text="${hasOwner} ? 'Данные владельца:' : 'Системная информация:'">
+                            Данные владельца:
+                        </h5>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div th:if="${hasOwner}">
                         <table class="table table-borderless">
                             <tr th:if="${owner != null}">
-                                <th width="40%">ФИО:</th>
+                                <th width="40%"><i class="bi bi-person me-1"></i>ФИО:</th>
                                 <td th:text="${owner.fullName}">Иванов Иван Иванович</td>
                             </tr>
                             <tr th:if="${owner != null and owner.phone != null}">
-                                <th>Телефон:</th>
+                                <th><i class="bi bi-telephone me-1"></i>Телефон:</th>
                                 <td th:text="${owner.phone}">+79991234567</td>
                             </tr>
                             <tr th:if="${owner != null and owner.address != null}">
-                                <th>Адрес:</th>
+                                <th><i class="bi bi-geo-alt me-1"></i>Адрес:</th>
                                 <td th:text="${owner.address}">г. Москва, ул. Примерная, д. 1</td>
                             </tr>
                         </table>
                     </div>
-                    <div th:unless="${hasOwner}" class="text-center">
+                    <div th:unless="${hasOwner}" class="text-center py-3">
                         <div th:if="${roles.contains('ADMIN')}">
-                            <h4>👑 Администратор системы</h4>
+                            <i class="bi bi-shield-check text-danger display-4"></i>
+                            <h4 class="mt-2">Администратор системы</h4>
                             <p class="text-muted">Вы имеете полный доступ ко всем функциям системы</p>
-                            <a th:href="@{/admin/dashboard}" class="btn btn-danger mt-2">Панель администратора</a>
+                            <a th:href="@{/admin/dashboard}" class="btn btn-danger mt-2">
+                                <i class="bi bi-speedometer2 me-1"></i>Панель администратора
+                            </a>
                         </div>
                         <div th:if="${roles.contains('MANAGER') and !roles.contains('ADMIN')}">
-                            <h4>👔 Менеджер</h4>
+                            <i class="bi bi-person-gear text-warning display-4"></i>
+                            <h4 class="mt-2">Менеджер</h4>
                             <p class="text-muted">Вы можете управлять пользователями и данными системы</p>
-                            <a th:href="@{/manager/dashboard}" class="btn btn-warning mt-2">Панель менеджера</a>
+<!--                            <a th:href="@{/manager/dashboard}" class="btn btn-warning mt-2">-->
+<!--                                <i class="bi bi-speedometer2 me-1"></i>Панель менеджера-->
+<!--                            </a>-->
                         </div>
                     </div>
                 </div>
@@ -101,23 +113,25 @@
         </div>
     </div>
 
-    <div th:if="${hasOwner}" class="card">
-        <div class="card-header bg-info text-white">
-            <h5 class="mb-0">🐾 Мои кошки</h5>
-        </div>
-        <div class="card-body">
-            <div th:if="${cats != null and !cats.empty}">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+    <div th:if="${hasOwner}" class="mt-4">
+        <div class="card">
+            <div class="card-header bg-info text-white d-flex align-items-center">
+                <i class="bi bi-heart-fill me-2"></i>
+                <h5 class="mb-0">Мои кошки</h5>
+            </div>
+            <div class="card-body">
+                <div th:if="${cats != null and !cats.empty}">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
                             <tr>
-                                <th>Имя</th>
-                                <th>Возраст</th>
-                                <th>Порода</th>
-                                <th>Действия</th>
+                                <th><i class="bi bi-tag me-1"></i>Имя</th>
+                                <th><i class="bi bi-calendar3 me-1"></i>Возраст</th>
+                                <th><i class="bi bi-bandaid me-1"></i>Порода</th>
+                                <th><i class="bi bi-gear me-1"></i>Действия</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr th:each="cat : ${cats}">
                                 <td th:text="${cat.name}"></td>
                                 <td>
@@ -127,87 +141,72 @@
                                     <span th:if="${cat.breed != null}" th:text="${cat.breed}"></span>
                                     <span th:if="${cat.breed == null}" class="text-muted">Не указана</span>
                                 </td>
-                                <td class="text">
+                                <td>
                                     <a th:href="@{/user/cat/edit/{id}(id=${cat.id})}"
-                                       class="btn btn-sm btn-primary">Редактировать данные</a>
+                                       class="btn btn-sm btn-primary">Редактировать
+                                    </a>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-<!--                <div class="row mt-4">-->
-<!--                    <div class="col-md-4">-->
-<!--                        <div class="card text-center">-->
-<!--                            <div class="card-body">-->
-<!--                                <h3 th:text="${cats != null ? cats.size() : 0}">0</h3>-->
-<!--                                <p class="text-muted">Всего кошек</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-4">-->
-<!--                        <div class="card text-center">-->
-<!--                            <div class="card-body">-->
-<!--                                <h3 th:text="${cats != null ? cats.?[age < 3].size() : 0}">0</h3>-->
-<!--                                <p class="text-muted">Котята (< 3 лет)</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-4">-->
-<!--                        <div class="card text-center">-->
-<!--                            <div class="card-body">-->
-<!--                                <h3 th:text="${cats != null ? cats.?[age >= 7].size() : 0}">0</h3>-->
-<!--                                <p class="text-muted">Взрослые (≥ 7 лет)</p>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-            </div>
-            <div th:if="${cats == null or cats.empty}" class="text-center text-muted py-4">
-                <p>У вас пока нет зарегистрированных кошек</p>
+                <div th:if="${cats == null or cats.empty}" class="text-center text-muted py-4">
+                    <i class="bi bi-heart display-4"></i>
+                    <p class="mt-2">У вас пока нет зарегистрированных кошек</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div th:unless="${hasOwner}" class="card">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">📊 Системная статистика</h5>
+    <div th:unless="${hasOwner}" class="card mt-4">
+        <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="bi bi-graph-up me-2"></i>
+            <h5 class="mb-0">Системная статистика</h5>
         </div>
         <div class="card-body">
             <div class="row text-center">
                 <div class="col-md-3" th:if="${roles.contains('ADMIN')}">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h3>👥</h3>
-                            <p class="text-muted">Управление пользователями</p>
-                            <a th:href="@{/admin/users}" class="btn btn-outline-primary btn-sm">Перейти</a>
+                            <i class="bi bi-people display-6 text-primary"></i>
+                            <p class="text-muted mt-2">Управление пользователями</p>
+                            <a th:href="@{/admin/dashboard}" class="btn btn-outline-primary btn-sm">
+                                Открыть
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h3>🐱</h3>
-                            <p class="text-muted">Все кошки системы</p>
-                            <a th:href="@{/cats}" class="btn btn-outline-info btn-sm">Перейти</a>
+                            <i class="bi bi-heart display-6 text-info"></i>
+                            <p class="text-muted mt-2">Все кошки системы</p>
+                            <a th:href="@{/cats}" class="btn btn-outline-info btn-sm">
+                                Открыть
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h3>👨‍💼</h3>
-                            <p class="text-muted">Все владельцы</p>
-                            <a th:href="@{/owners}" class="btn btn-outline-success btn-sm">Перейти</a>
+                            <i class="bi bi-person-vcard display-6 text-success"></i>
+                            <p class="text-muted mt-2">Все владельцы</p>
+                            <a th:href="@{/owners}" class="btn btn-outline-success btn-sm">
+                                Открыть
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <h3>🏥</h3>
-                            <p class="text-muted">Ветеринарные визиты</p>
-                            <a th:href="@{/visits}" class="btn btn-outline-warning btn-sm">Перейти</a>
+                            <i class="bi bi-hospital display-6 text-warning"></i>
+                            <p class="text-muted mt-2">Ветеринарные визиты</p>
+                            <a href="/manager/visits/pending" class="btn btn-outline-warning btn-sm">
+                                Открыть
+                            </a>
                         </div>
                     </div>
                 </div>

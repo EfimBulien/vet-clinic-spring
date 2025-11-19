@@ -3,8 +3,11 @@ package org.mpt.vet.clinic.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mpt.vet.clinic.domains.Vet;
+import org.mpt.vet.clinic.domains.VetVisit;
+import org.mpt.vet.clinic.dto.UpdateVetVisitDto;
 import org.mpt.vet.clinic.dto.VetDto;
 import org.mpt.vet.clinic.services.VetService;
+import org.mpt.vet.clinic.services.VetVisitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 class ManagerController {
     private final VetService vetService;
+    private final VetVisitService vetVisitService;
 
     @GetMapping("/manager/reports")
     public String managerReports(Model model) {
@@ -167,5 +171,59 @@ class ManagerController {
                     "Не удалось удалить ветеринара: " + e.getMessage());
         }
         return "redirect:/manager/vets";
+    }
+
+
+    @GetMapping("/manager/visits/pending")
+    public String pendingVisits(Model model) {
+        List<VetVisit> pendingVisits = vetVisitService.findPendingVisits();
+        model.addAttribute("pendingVisits", pendingVisits);
+        return "manager/pending-visits";
+    }
+
+    @GetMapping("/manager/visits/process/{id}")
+    public String showProcessVisitForm(@PathVariable Long id, Model model) {
+        VetVisit visit = vetVisitService.findById(id);
+        model.addAttribute("visit", visit);
+        model.addAttribute("updateDto", new UpdateVetVisitDto());
+        return "manager/process-visit";
+    }
+
+    @PostMapping("/manager/visits/process/{id}")
+    public String processVisit(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("updateDto") UpdateVetVisitDto updateDto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            VetVisit visit = vetVisitService.findById(id);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.updateDto",
+                    bindingResult
+            );
+            redirectAttributes.addFlashAttribute("updateDto", updateDto);
+            redirectAttributes.addFlashAttribute("visit", visit);
+            return "redirect:/manager/visits/process/" + id;
+        }
+
+        try {
+            VetVisit vetVisitToUpdate = vetVisitService.findById(id);
+
+            vetVisitToUpdate.setDiagnosis(updateDto.getDiagnosis());
+            vetVisitToUpdate.setTreatment(updateDto.getTreatment());
+            vetVisitToUpdate.setCost(updateDto.getCost());
+
+            VetVisit updatedVisit = vetVisitService.updateVisit(id, vetVisitToUpdate);
+
+            redirectAttributes.addFlashAttribute("success",
+                    "Прием для кошки " + updatedVisit.getCat().getName() + " успешно обработан!");
+            return "redirect:/manager/visits/pending";
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Ошибка при обработке приема: " + e.getMessage());
+            return "redirect:/manager/visits/process/" + id;
+        }
     }
 }

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Запись на прием</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-calendar-plus"></i> Запись на прием к ветеринару</h1>
+        <div>
+            <a th:href="@{/user/visits}" class="btn btn-outline-primary me-2">Назад</a>
+        </div>
+    </div>
+
+    <div th:if="${hasOwner}">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Новая запись</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/user/visits/book}" th:object="${createVisitDto}" method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-heart"></i> Выберите кошку *</label>
+                        <select th:field="*{catId}" class="form-select" required>
+                            <option value="">-- Выберите кошку --</option>
+                            <option th:each="cat : ${cats}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.name} + (${cat.breed} ? ' (' + ${cat.breed} + ')' : '')">
+                                Барсик (Сиамская)
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('catId')}" th:errors="*{catId}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-person-badge"></i> Выберите ветеринара *</label>
+                        <select th:field="*{vetId}" class="form-select" required>
+                            <option value="">-- Выберите ветеринара --</option>
+                            <option th:each="vet : ${vets}"
+                                    th:value="${vet.id}"
+                                    th:text="${vet.name} + ' - ' + ${vet.clinicName} + (${vet.specialty} ? ' (' + ${vet.specialty} + ')' : '') + ' - ' + ${vet.phone}">
+                                Доктор Айболит - ВетКлиника (Терапия) - +78001234567
+                            </option>
+                        </select>
+                        <div class="text-danger" th:if="${#fields.hasErrors('vetId')}" th:errors="*{vetId}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><i class="bi bi-calendar-date"></i> Дата визита *</label>
+                        <input type="date" th:field="*{visitDate}" class="form-control"
+                               th:min="${minDate}" required>
+                        <div class="text-danger" th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}"></div>
+                        <div class="form-text">Минимальная дата: <span th:text="${minDate}">2025-01-01</span></div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-calendar-check"></i> Записаться на прием</button>
+                        <a th:href="@{/user/visits}" class="btn btn-outline-secondary">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:unless="${hasOwner}" class="text-center py-5">
+        <div class="card">
+            <div class="card-body py-5">
+                <h4 class="text-muted"><i class="bi bi-person"></i> Только для владельцев кошек</h4>
+                <p class="text-muted">У вас нет зарегистрированных кошек для записи на прием</p>
+                <a th:href="@{/user/cat/add}" class="btn btn-primary mt-2">Добавить кошку</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

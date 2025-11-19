@@ -23,4 +23,8 @@ public class CatOwnerService {
     public Optional<CatOwner> findByCatIdAndOwnerId(Long catId, Long ownerId) {
         return catOwnerRepository.findByCatIdAndOwnerId(catId, ownerId);
     }
+
+    public boolean existsByCatIdAndOwnerIdAndOwnershipEndDateIsNull(Long catId, Long ownerId) {
+        return catOwnerRepository.existsByCatIdAndOwnerIdAndOwnershipEndDateIsNull(catId, ownerId);
+    }
 }

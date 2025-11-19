@@ -1,6 +1,7 @@
 package org.mpt.vet.clinic.repositories;
 
 
+import org.mpt.vet.clinic.domains.Cat;
 import org.mpt.vet.clinic.domains.CatOwner;
 import org.mpt.vet.clinic.domains.CatOwnerId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,5 @@ public interface CatOwnerRepository extends JpaRepository<CatOwner, CatOwnerId> 
     List<CatOwner> findByCatId(Long catId);
     boolean existsByCatIdAndOwnerId(Long catId, Long ownerId);
     Optional<CatOwner> findByCatIdAndOwnerId(Long catId, Long ownerId);
+    boolean existsByCatIdAndOwnerIdAndOwnershipEndDateIsNull(Long catId, Long ownerId);
 }

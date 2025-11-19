@@ -3,7 +3,7 @@ package org.mpt.vet.clinic.services;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.mpt.vet.clinic.domains.*;
-import org.mpt.vet.clinic.dto.RegistrationRequest;
+import org.mpt.vet.clinic.dto.CreateOwnerDto;
 import org.mpt.vet.clinic.repositories.CatOwnerRepository;
 import org.mpt.vet.clinic.repositories.CatRepository;
 import org.mpt.vet.clinic.repositories.OwnerRepository;
@@ -32,7 +32,7 @@ public class OwnerService {
     private final UserService userService;
 
     @Transactional
-    public void registerOwner(@NotNull RegistrationRequest request) {
+    public void registerOwner(@NotNull CreateOwnerDto request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Пользователь с email '" + request.email() + "' уже существует.");
         }
@@ -59,6 +59,12 @@ public class OwnerService {
     public Owner findByUserId(Long userId) {
         return ownerRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Владелец не найден"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cat> findCatsByUserId(Long userId) {
+        Owner owner = findByUserId(userId);
+        return ownerRepository.findActiveCatsByOwnerId(owner.getId());
     }
 
     @Transactional(readOnly = true)

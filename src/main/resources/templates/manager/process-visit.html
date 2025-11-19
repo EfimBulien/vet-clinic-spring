@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обработка приема</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-clipboard2-pulse"></i> Обработка приема</h1>
+        <div>
+            <a th:href="@{/manager/visits/pending}" class="btn btn-outline-secondary">Назад</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Информация о приеме</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Дата:</strong>
+                        <span th:text="${#temporals.format(visit.visitDate, 'dd.MM.yyyy')}">01.01.2025</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Кошка:</strong>
+                        <span th:text="${visit.cat.name}">Барсик</span>
+                        <span th:if="${visit.cat.breed}" class="text-muted">
+                            (<span th:text="${visit.cat.breed}">Сиамская</span>)
+                        </span>
+                        <br>
+                        <small class="text-muted">Возраст: <span th:text="${visit.cat.age}">3</span> лет</small>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Владелец:</strong>
+                        <span th:text="${visit.cat.ownerships[0].owner.fullName}">Иванов Иван</span>
+                        <br>
+                        <small th:if="${visit.cat.ownerships[0].owner.phone}" class="text-muted">
+                            Тел: <span th:text="${visit.cat.ownerships[0].owner.phone}">+79991234567</span>
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Ветеринар:</strong>
+                        <span th:text="${visit.vet.name}">Доктор Айболит</span>
+                        <br>
+                        <small class="text-muted" th:if="${visit.vet.specialty}">
+                            Специализация: <span th:text="${visit.vet.specialty}">терапевт</span>
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            Клиника: <span th:text="${visit.vet.clinicName}">ВетКлиника</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Заполнение данных приема</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/manager/visits/process/{id}(id=${visit.id})}"
+                          th:object="${updateDto}" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Диагноз *</label>
+                            <textarea th:field="*{diagnosis}" class="form-control"
+                                      rows="3" required
+                                      placeholder="Введите диагноз..."></textarea>
+                            <div class="text-danger" th:if="${#fields.hasErrors('diagnosis')}" th:errors="*{diagnosis}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Лечение</label>
+                            <textarea th:field="*{treatment}" class="form-control"
+                                      rows="3"
+                                      placeholder="Опишите назначенное лечение..."></textarea>
+                            <div class="text-danger" th:if="${#fields.hasErrors('treatment')}" th:errors="*{treatment}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Стоимость *</label>
+                            <div class="input-group">
+                                <input type="number" th:field="*{cost}" class="form-control"
+                                       step="0.01" min="0" required
+                                       placeholder="0.00">
+                                <span class="input-group-text">₽</span>
+                            </div>
+                            <div class="text-danger" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}"></div>
+                            <div class="form-text">Введите стоимость приема</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Завершить прием</button>
+                            <a th:href="@{/manager/visits/pending}" class="btn btn-outline-secondary">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

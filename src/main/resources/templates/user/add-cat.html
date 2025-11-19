@@ -32,10 +32,9 @@
                     <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Добавить</button>
+                <button type="submit" class="btn btn-primary w-100 mt-1">Добавить</button>
             </form>
-
-            <a href="/user/profile" class="btn btn-link mt-3 w-100">← Назад в профиль</a>
+            <a th:href="@{/user/profile}" class="btn btn-outline-secondary w-100 mt-1">Отменить</a>
         </div>
     </div>
 </div>

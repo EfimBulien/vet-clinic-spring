@@ -3,7 +3,7 @@ package org.mpt.vet.clinic.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.mpt.vet.clinic.domains.Role;
-import org.mpt.vet.clinic.dto.RegistrationRequest;
+import org.mpt.vet.clinic.dto.CreateOwnerDto;
 import org.mpt.vet.clinic.mappers.UserMapper;
 import org.mpt.vet.clinic.services.OwnerService;
 import org.mpt.vet.clinic.services.UserService;
@@ -33,14 +33,14 @@ public class AuthController {
     public String showRegistrationForm(Model model) {
         model.addAttribute(
                 "request",
-                new RegistrationRequest("", "", "", "", "")
+                new CreateOwnerDto("", "", "", "", "")
         );
         return "auth/register";
     }
 
     @PostMapping("/register")
     public String register(
-            @Valid @ModelAttribute("request") RegistrationRequest request,
+            @Valid @ModelAttribute("request") CreateOwnerDto request,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование пользователя</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Редактирование пользователя</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Информация о выбранном пользователе:</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <th width="40%">ID:</th>
+                                    <td th:text="${user.id}">1</td>
+                                </tr>
+                                <tr>
+                                    <th>Email:</th>
+                                    <td th:text="${user.email}">user@example.com</td>
+                                </tr>
+                                <tr>
+                                    <th>Текущие роли:</th>
+                                    <td>
+                                        <span th:each="role : ${user.roles}"
+                                              class="badge me-1"
+                                              th:classappend="${role.name == 'ADMIN' ? 'bg-danger' :
+                                                             role.name == 'MANAGER' ? 'bg-warning' : 'bg-secondary'}">
+                                            <span th:text="${role.name}">USER</span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Управление ролями</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/admin/users/edit/{id}(id=${user.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Выберите роли:</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="roles" value="USER"
+                                                       th:checked="${user.roles.?[name == 'USER'].size() > 0}"
+                                                       id="role-user">
+                                                <label class="form-check-label fw-bold" for="role-user">
+                                                    USER
+                                                </label>
+                                            </div>
+                                            <p class="text-muted small mt-2">
+                                                Обычный пользователь, может управлять своими кошками и записываться на приемы
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="roles" value="MANAGER"
+                                                       th:checked="${user.roles.?[name == 'MANAGER'].size() > 0}"
+                                                       id="role-manager">
+                                                <label class="form-check-label fw-bold" for="role-manager">
+                                                    MANAGER
+                                                </label>
+                                            </div>
+                                            <p class="text-muted small mt-2">
+                                                Менеджер, может управлять ветеринарами и обрабатывать приемы
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="roles" value="ADMIN"
+                                                       th:checked="${user.roles.?[name == 'ADMIN'].size() > 0}"
+                                                       id="role-admin">
+                                                <label class="form-check-label fw-bold" for="role-admin">
+                                                    ADMIN
+                                                </label>
+                                            </div>
+                                            <p class="text-muted small mt-2">
+                                                Администратор, полный доступ ко всем функциям системы
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3">
+                                <small>
+                                    💡 <strong>Подсказка:</strong> Можно выбрать несколько ролей.
+                                    Пользователь с ролью ADMIN автоматически имеет все права.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary me-md-2">Сохранить</button>
+                            <a th:href="@{/admin/dashboard}" class="btn btn-outline-secondary">Отменить</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Внимание!</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-danger">Удалить пользователя</h6>
+                            <p class="text-muted mb-0">
+                                Это действие нельзя отменить. Все данные пользователя будут удалены.
+                            </p>
+                        </div>
+                        <form th:action="@{/admin/users/{id}(id=${user.id})}"
+                              method="post"
+                              onsubmit="return confirm('Вы уверены, что хотите удалить пользователя ' + '${user.email}' + '? Это действие нельзя отменить.')">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-danger">Удалить пользователя</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

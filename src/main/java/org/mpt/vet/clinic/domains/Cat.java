@@ -16,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-        name = "cats",
-        uniqueConstraints = @UniqueConstraint(columnNames = "name")
+        name = "cats"
 )
 public class Cat {
 

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
-public record RegistrationRequest(
+public record CreateOwnerDto(
         @NotBlank @Email @Setter @Getter String email,
         @NotBlank @Setter @Getter String password,
         @NotBlank @Setter @Getter String fullName,
