@@ -25,8 +25,8 @@ public class CatService {
         );
     }
 
-    public void save(Cat cat) {
-        catRepository.save(cat);
+    public Cat save(Cat cat) {
+        return catRepository.save(cat);
     }
 
     public void deleteById(Long id, boolean force) {
