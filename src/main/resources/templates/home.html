@@ -2,51 +2,235 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Главная страница</title>
+    <title>Ветеринарная клиника - Главная</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .btn-group-spacing > * {
-            margin: 0.25rem !important;
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            border-radius: 0 0 2rem 2rem;
+            margin-bottom: 3rem;
         }
-        @media (min-width: 576px) {
-            .btn-group-spacing {
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 0.5rem;
-            }
+        .feature-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+        .btn-modern {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .user-welcome {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .role-badge {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+        }
+        .stats-card {
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
         }
     </style>
 </head>
-<body>
-    <div class="container mt-5">
-        <h2>Добро пожаловать!</h2>
-        <p th:text="'Login as: ' + ${email}"></p>
-
-        <div class="btn-group-spacing mt-3">
-            <div sec:authorize="hasRole('ADMIN')">
-                <a href="/admin/dashboard" class="btn btn-danger">Админ панель</a>
+<body class="bg-light">
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="bi bi-heart-pulse"></i> Ветеринарная клиника
+                </h1>
+                <p class="lead mb-4">
+                    Профессиональная забота о ваших питомцах. Современные технологии для здоровья животных.
+                </p>
+                <div class="user-welcome">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="mb-1">Добро пожаловать!</h5>
+                            <p class="mb-0" th:text="${email}"></p>
+                        </div>
+                        <div>
+                            <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger role-badge">
+                                Администратор</span>
+                            <span sec:authorize="hasRole('MANAGER')" class="badge bg-warning role-badge">
+                                Менеджер</span>
+                            <span sec:authorize="hasRole('USER')" class="badge bg-primary role-badge">
+                                Пользователь</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div sec:authorize="hasAnyRole('MANAGER','ADMIN')">
-                <a href="/manager/vets" class="btn btn-warning">Управление ветеренарами</a>
-                <a href="/admin/owners" class="btn btn-success">Управление владельцами</a>
+            <div class="col-lg-4 text-center">
+                <i class="bi bi-heart-fill display-1 opacity-75"></i>
             </div>
-
-            <div sec:authorize="hasAnyRole('MANAGER')">
-               <a th:href="@{/manager/visits/pending}" class="btn btn-warning">Ожидающие приемы</a>
-            </div>
-
-            <div sec:authorize="hasAnyRole('USER')">
-                <a href="/user/visits" class="btn btn-primary">Мои визиты к ветеринару</a>
-            </div>
-
-            <a href="/user/profile" class="btn btn-secondary">Мой профиль</a>
-
-            <form th:action="@{/logout}" method="post" class="d-inline">
-                <button type="submit" class="btn btn-outline-danger">Выйти</button>
-            </form>
         </div>
     </div>
+</div>
+
+<div class="container">
+    <div class="quick-actions">
+        <div sec:authorize="hasRole('ADMIN')" class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-shield-check display-4 text-danger mb-3"></i>
+                    <h5 class="card-title fw-bold">Административная панель</h5>
+                    <p class="card-text text-muted">
+                        Полный контроль над системой, управление пользователями и настройками
+                    </p>
+                    <a href="/admin/dashboard" class="btn btn-danger btn-modern w-100">
+                        <i class="bi bi-speedometer2 me-2"></i>Перейти в админку
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasAnyRole('MANAGER','ADMIN')" class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-person-badge display-4 text-warning mb-3"></i>
+                    <h5 class="card-title fw-bold">Управление ветеринарами</h5>
+                    <p class="card-text text-muted">
+                        Добавление, редактирование и управление ветеринарными специалистами
+                    </p>
+                    <a href="/manager/vets" class="btn btn-warning btn-modern w-100">
+                        <i class="bi bi-people me-2"></i>Управление ветеринарами
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasAnyRole('MANAGER','ADMIN')" class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-people display-4 text-success mb-3"></i>
+                    <h5 class="card-title fw-bold">Управление владельцами</h5>
+                    <p class="card-text text-muted">Регистрация и управление владельцами домашних животных</p>
+                    <a href="/admin/owners" class="btn btn-success btn-modern w-100">
+                        <i class="bi bi-person-plus me-2"></i>Управление владельцами
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasRole('MANAGER')" class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-clock display-4 text-info mb-3"></i>
+                    <h5 class="card-title fw-bold">Ожидающие приемы</h5>
+                    <p class="card-text text-muted">Просмотр и обработка запланированных визитов к ветеринару</p>
+                    <a th:href="@{/manager/visits/pending}" class="btn btn-info btn-modern w-100">
+                        <i class="bi bi-clipboard-check me-2"></i>Обработать приемы
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="hasRole('USER')" class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-calendar-check display-4 text-primary mb-3"></i>
+                    <h5 class="card-title fw-bold">Мои визиты</h5>
+                    <p class="card-text text-muted">Просмотр истории визитов и запись на новые приемы</p>
+                    <a href="/user/visits" class="btn btn-primary btn-modern w-100">
+                        <i class="bi bi-eye me-2"></i>Мои визиты
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <div class="card h-100 border-0 bg-white">
+                <div class="card-body text-center p-4">
+                    <i class="bi bi-person-circle display-4 text-secondary mb-3"></i>
+                    <h5 class="card-title fw-bold">Мой профиль</h5>
+                    <p class="card-text text-muted">Управление личными данными и настройками аккаунта</p>
+                    <a href="/user/profile" class="btn btn-secondary btn-modern w-100">
+                        <i class="bi bi-gear me-2"></i>Настройки профиля
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4 text-center">
+                <i class="bi bi-graph-up"></i> Быстрая статистика
+            </h3>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card">
+                <i class="bi bi-people display-6 mb-2"></i>
+                <h4>Владельцы</h4>
+                <p class="mb-0">Управление клиентами</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card" style="background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);">
+                <i class="bi bi-person-badge display-6 mb-2"></i>
+                <h4>Ветеринары</h4>
+                <p class="mb-0">Специалисты клиники</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card" style="background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);">
+                <i class="bi bi-calendar-check display-6 mb-2"></i>
+                <h4>Приемы</h4>
+                <p class="mb-0">Запланированные визиты</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stats-card" style="background: linear-gradient(45deg, #fa709a 0%, #fee140 100%);">
+                <i class="bi bi-heart display-6 mb-2"></i>
+                <h4>Питомцы</h4>
+                <p class="mb-0">Наши пациенты</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5 pt-4 border-top">
+        <form th:action="@{/logout}" method="post" class="d-inline-block">
+            <button type="submit" class="btn btn-outline-danger btn-modern">
+                <i class="bi bi-box-arrow-right me-2"></i>Выйти из системы
+            </button>
+        </form>
+        <div class="mt-3">
+            <small class="text-muted">
+                <i class="bi bi-info-circle"></i> Ветеринарная клиника &copy; 2025
+            </small>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
