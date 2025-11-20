@@ -40,7 +40,6 @@ CREATE TABLE owners (
     id BIGSERIAL PRIMARY KEY,
     full_name VARCHAR(256) NOT NULL,
     phone VARCHAR(20) UNIQUE,
-    email VARCHAR(256) UNIQUE,
     address TEXT,
     user_id BIGINT UNIQUE REFERENCES users(id) ON DELETE CASCADE
 );

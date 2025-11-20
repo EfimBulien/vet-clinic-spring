@@ -123,20 +123,20 @@
                         Добавление, редактирование и управление ветеринарными специалистами
                     </p>
                     <a href="/manager/vets" class="btn btn-warning btn-modern w-100">
-                        <i class="bi bi-people me-2"></i>Управление ветеринарами
+                        <i class="bi bi-people me-2"></i>Перейти в управление
                     </a>
                 </div>
             </div>
         </div>
 
-        <div sec:authorize="hasAnyRole('MANAGER','ADMIN')" class="feature-card">
+        <div sec:authorize="hasAnyRole('ADMIN')" class="feature-card">
             <div class="card h-100 border-0 bg-white">
                 <div class="card-body text-center p-4">
                     <i class="bi bi-people display-4 text-success mb-3"></i>
                     <h5 class="card-title fw-bold">Управление владельцами</h5>
                     <p class="card-text text-muted">Регистрация и управление владельцами домашних животных</p>
                     <a href="/admin/owners" class="btn btn-success btn-modern w-100">
-                        <i class="bi bi-person-plus me-2"></i>Управление владельцами
+                        <i class="bi bi-person-plus me-2"></i>Перейти в управление
                     </a>
                 </div>
             </div>

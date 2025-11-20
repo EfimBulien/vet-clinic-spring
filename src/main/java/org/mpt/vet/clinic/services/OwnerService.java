@@ -130,7 +130,7 @@ public class OwnerService {
     }
 
     @Transactional
-    public void updateOwner(Long id, Owner ownerDetails) {
+    public void updateOwner(Long id, @NotNull Owner ownerDetails) {
         Owner owner = ownerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Владелец не найден"));
 
